@@ -276,8 +276,6 @@ async function selectEffort(current?: string): Promise<'low' | 'medium' | 'high'
   return effort as 'low' | 'medium' | 'high';
 }
 
-async function askAnthropicModel(current: string): Promise<string | null> {
-
 export async function editAgent(): Promise<boolean> {
   const roleKey = await selectAgentToEdit();
   if (!roleKey) return false;
