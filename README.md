@@ -60,7 +60,7 @@ architecture.md
 
 ## Providers
 
-Rabit supports multiple AI backends. Switch anytime from the settings menu.
+Rabit supports two AI backends. Switch anytime from the settings menu.
 
 | Provider | How | Requires |
 |----------|-----|----------|
@@ -83,7 +83,7 @@ Rabit supports multiple AI backends. Switch anytime from the settings menu.
 
 ## Installation
 
-**Requirements:** Node.js >= 18, Ollama (or Claude CLI / Anthropic API key)
+**Requirements:** Node.js >= 18, Ollama (or Claude CLI)
 
 ```bash
 git clone https://github.com/theHerick/rabit.git
@@ -132,7 +132,7 @@ rabit
 rabit/
 ├── src/
 │   ├── agents/        # Partitioner, Coder, Reviewer, Organizer
-│   ├── providers/     # Ollama, Claude CLI, Anthropic API
+│   ├── providers/     # Ollama, Claude CLI
 │   ├── core/          # Pipeline, session loop, executor
 │   ├── config/        # Agent bindings & defaults
 │   ├── db/            # Vector memory (JSONL + cosine similarity)
@@ -149,7 +149,7 @@ rabit/
 - **Parallel Coders** — distribute work across 1, 2, or 3 coders simultaneously
 - **Auto-Review** — TypeScript compile + build + test run automatically
 - **Auto-Fix** — if tests fail, a Fix Organizer patches the issues and re-validates
-- **Provider Agnostic** — same pipeline, any model (local or cloud)
+- **Provider Agnostic** — same pipeline, any model (Ollama or Claude CLI)
 - **Preset System** — save and load agent configurations
 - **Vector Memory** — `/brain` builds a semantic knowledge map of your projects
 
