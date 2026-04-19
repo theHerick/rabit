@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ollama list *)",
+      "Bash(ollama rm *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.keys\\(\\)]\")",
+      "Read(//home/herick/.claude/session-env/**)",
+      "Bash(claude --version)",
+      "Bash(claude -p --input-format stream-json --output-format stream-json --verbose --no-session-persistence)",
+      "Bash(claude -p --model haiku --output-format json --json-schema '{\"type\":\"object\",\"properties\":{\"msg\":{\"type\":\"string\"}},\"required\":[\"msg\"]}' --no-session-persistence)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}

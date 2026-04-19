@@ -1,0 +1,39 @@
+{
+  "name": "rabit-core",
+  "version": "0.1.0",
+  "description": "Ra-Bit Core - Multi-Agent Swarm Orchestrator for local Ollama models",
+  "main": "dist/cli.js",
+  "bin": {
+    "rabit": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/cli.ts",
+    "dev": "ts-node src/cli.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "ollama",
+    "swarm",
+    "multi-agent",
+    "cli",
+    "orchestrator"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ollama": "^0.5.11",
+    "inquirer": "^8.2.6",
+    "chalk": "^4.1.2",
+    "log-update": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/inquirer": "^8.2.10",
+    "typescript": "^5.4.0",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
