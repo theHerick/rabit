@@ -28,4 +28,4 @@ export async function completeFor(binding: RoleBinding, opts: Omit<CompleteOptio
   return provider.complete({ ...opts, model: binding.model, effort });
 }
 
-export const PROVIDER_NAMES: ReadonlyArray<ProviderName> = ['ollama', 'anthropic', 'claude-cli'];
+export const PROVIDER_NAMES: ReadonlyArray<ProviderName> = ['ollama', 'claude-cli'];

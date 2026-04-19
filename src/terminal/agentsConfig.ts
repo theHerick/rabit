@@ -8,7 +8,7 @@ import inquirer from 'inquirer';
 import {
   loadConfig, saveConfig, ROLES, AgentRoleKey,
   getCoderCount, setCoderCount,
-  CLAUDE_CONFIG, CLAUDE_CLI_CONFIG,
+  CLAUDE_CLI_CONFIG,
   AgentConfig, listCustomPresets, saveCustomPreset, deleteCustomPreset
 } from '../config/agents';
 import { getAvailableModels } from '../tools/ollama';
@@ -23,10 +23,8 @@ function detectCurrentPreset(): string {
   const cfg = loadConfig();
   const providers = Object.values(cfg.models).map((b) => b.provider);
   const hasCliProvider  = providers.every((p) => p === 'claude-cli');
-  const hasApiProvider  = providers.every((p) => p === 'anthropic');
   const hasOllaProvider = providers.every((p) => p === 'ollama');
   if (hasCliProvider)  return 'Claude CLI';
-  if (hasApiProvider)  return 'Claude API';
   if (hasOllaProvider) return 'Ollama';
   return 'Mixed';
 }
@@ -201,7 +199,7 @@ async function selectProvider(current: ProviderName): Promise<ProviderName | nul
       message: chalk.cyan('Provider:'),
       prefix: '>',
       choices: [
-        ...PROVIDER_NAMES.map((p) => ({
+        ...PROVIDER_NAMES.filter(p => p !== 'anthropic').map((p) => ({
           name: `  ${labels[p]}${p === current ? chalk.green('  [current]') : ''}`,
           value: p
         })),
@@ -279,22 +277,6 @@ async function selectEffort(current?: string): Promise<'low' | 'medium' | 'high'
 }
 
 async function askAnthropicModel(current: string): Promise<string | null> {
-  const { model } = await inquirer.prompt<{ model: string }>([
-    {
-      type: 'input',
-      name: 'model',
-      message: chalk.cyan('Anthropic Model:'),
-      default: current.startsWith('claude-') ? current : 'claude-sonnet-4-6',
-      prefix: '>'
-    }
-  ]);
-  const trimmed = model.trim();
-  if (!trimmed) return null;
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log(chalk.yellow('\n  [ Warning ] ') + 'ANTHROPIC_API_KEY not found. Configure before using.\n');
-  }
-  return trimmed;
-}
 
 export async function editAgent(): Promise<boolean> {
   const roleKey = await selectAgentToEdit();
@@ -320,8 +302,6 @@ export async function editAgent(): Promise<boolean> {
 
   if (provider === 'ollama') {
     model = await selectOllamaModel(current.model);
-  } else if (provider === 'anthropic') {
-    model = await askAnthropicModel(current.model);
   } else if (provider === 'claude-cli') {
     model = await selectClaudeCliModel(current.model);
     if (model) {

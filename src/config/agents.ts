@@ -57,31 +57,9 @@ export interface RoleMeta {
 }
 
 /**
- * Preset para usar Claude via Anthropic API (requer ANTHROPIC_API_KEY).
- * Tarefas leves (router, reviewer, organizer) usam Haiku.
- * Tarefas pesadas (architect, coder) usam Sonnet.
- */
-export const CLAUDE_CONFIG: AgentConfig = {
-  models: {
-    architect:   { provider: 'anthropic', model: 'claude-sonnet-4-6' },
-    coder:       { provider: 'anthropic', model: 'claude-sonnet-4-6' },
-    juniorCoder: { provider: 'anthropic', model: 'claude-haiku-4-5-20251001' },
-    seniorCoder: { provider: 'anthropic', model: 'claude-sonnet-4-6' },
-    designCoder: { provider: 'anthropic', model: 'claude-sonnet-4-6' },
-    reviewer:    { provider: 'anthropic', model: 'claude-haiku-4-5-20251001' },
-    organizer:   { provider: 'anthropic', model: 'claude-haiku-4-5-20251001' }
-  },
-  params: {
-    agentTimeoutMs: 5 * 60_000,
-    coderCount: 3,
-    executionMode: 'ask'
-  }
-};
-
-/**
- * Preset para usar o binario `claude` local (Claude Code instalado na maquina).
- * Sem API key — usa o login existente do Claude Code.
- * Tarefas leves usam Haiku, pesadas usam Sonnet.
+ * Preset for using the local `claude` binary (Claude Code installed on the machine).
+ * No API key — uses existing Claude Code login.
+ * Light tasks use Haiku, heavy tasks use Sonnet.
  */
 export const CLAUDE_CLI_CONFIG: AgentConfig = {
   models: {
