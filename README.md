@@ -21,7 +21,13 @@ Rabit is your **AI Project Manager**. The philosophy is simple: **You are the Ch
    ```bash
    npm install
    ```
-3. Start Rabit:
+3. (Optional) Install the `rabit` command globally to use it from anywhere:
+   ```bash
+   npm run install-rabit
+   ```
+   *Note: On Linux/macOS, you might need to run `sudo npm link` manually if the above fails with permissions.*
+
+4. Alternatively, run in development mode:
    ```bash
    npm run dev
    ```

@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "ts-node src/cli.ts",
     "dev": "ts-node src/cli.ts",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "install-rabit": "npm run build && npm link"
   },
   "keywords": [
     "ollama",
