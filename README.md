@@ -155,15 +155,6 @@ rabit/
 
 ---
 
-## Roadmap
-
-- [ ] Web UI dashboard
-- [ ] GitHub Actions integration
-- [ ] Custom agent scripting
-- [ ] Project templates library
-
----
-
 <div align="center">
 
 Made by [Herick B. Tiburski](https://github.com/theHerick)
