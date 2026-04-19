@@ -66,7 +66,6 @@ Rabit supports multiple AI backends. Switch anytime from the settings menu.
 |----------|-----|----------|
 | **Ollama** | Fully local | Ollama running locally |
 | **Claude CLI** | Local binary | `claude` CLI installed |
-| **Anthropic API** | Cloud | `ANTHROPIC_API_KEY` |
 
 **Default agents (Ollama):**
 
