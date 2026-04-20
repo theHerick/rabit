@@ -29,7 +29,7 @@ import {
 import { openProject } from './tools/projectSession';
 import { runNewPipeline } from './core/newPipeline';
 import { runInteractiveSession } from './core/loop';
-import { wipeMemory } from './db/memory';
+import { wipeMemory, renderBrain, listAll } from './db/memory';
 import { showLicenseDialog } from './terminal/license';
 import { resetConfig } from './config/agents';
 import { loadAnthropicKeyFromFile, setupAnthropicKey } from './setup/anthropicKey';
@@ -106,7 +106,7 @@ async function handleSettings(): Promise<void> {
       console.log(chalk.gray('History cleared.'));
       await pressEnter();
     } else if (choice === 'reset-brain') {
-      const confirm = await confirmAction('Reset vector memory (/brain)?');
+      const confirm = await confirmAction('Reset vector memory?');
       if (!confirm) continue;
       await wipeMemory();
       console.log(chalk.green('[ OK ] ') + 'Memory wiped.\n');
@@ -125,6 +125,25 @@ async function handleMcpLink(): Promise<void> {
   console.log(chalk.white('To unify memory with your official Claude CLI, run this command in your terminal:\n'));
   console.log(chalk.green.bold(linkCmd));
   console.log(chalk.gray('\nAfter running this, Claude will have tools to search and record your project history.\n'));
+  await pressEnter();
+}
+
+async function handleViewBrain(): Promise<void> {
+  const { freshScreen } = await import('./terminal/display');
+  const { say } = await import('./terminal/voices');
+  freshScreen();
+  say('brain', 'drawing the knowledge tree...');
+  const tree = await renderBrain();
+  console.log(tree + '\n');
+  
+  const summaries = (await listAll()).filter(m => m.category === 'summary');
+  if (summaries.length > 0) {
+    console.log(chalk.bold.yellow('=== Semantic Summaries ==='));
+    summaries.slice(-5).forEach(s => {
+      console.log(chalk.gray(`[${s.timestamp.slice(0,10)}] `) + chalk.white(s.content.slice(0, 200) + '...'));
+    });
+    console.log();
+  }
   await pressEnter();
 }
 
@@ -158,6 +177,8 @@ async function main(): Promise<void> {
       await handleSettings();
     } else if (choice === 'mcp-link') {
       await handleMcpLink();
+    } else if (choice === 'view-brain') {
+      await handleViewBrain();
     } else if (choice === 'buy-license') {
       freshScreen();
       await showLicenseDialog();

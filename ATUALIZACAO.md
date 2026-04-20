@@ -45,8 +45,7 @@ Agora o Rabit fala a língua oficial da Anthropic. Implementamos um servidor **M
 ### 🛠️ Melhorias na Interface
 
 - **Menu de Linkagem**: Adicionamos a opção `[ Link Unified Memory (MCP) ]` no menu principal.
-- **Comando `/mcp`**: Instruções passo-a-passo para integrar ferramentas externas.
-- **Comando `/brain`**: Visualização aprimorada da árvore de conhecimento e resumos semânticos.
+- **Menu Brain**: Visualização aprimorada da árvore de conhecimento e resumos semânticos.
 
 ---
 

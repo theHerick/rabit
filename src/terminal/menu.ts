@@ -15,6 +15,7 @@ export type MainChoice =
   | 'settings'
   | 'exit'
   | 'mcp-link'
+  | 'view-brain'
   | 'buy-license';
 
 export type SettingsChoice = 'agents-config' | 'clear-history' | 'reset-brain' | 'back';
@@ -30,6 +31,7 @@ export async function mainMenu(): Promise<MainChoice> {
       choices: [
         { name: '[ Chat / New Project ]', value: 'new-session' },
         { name: '[ Open Existing Project ]', value: 'open-project' },
+        { name: '[ Brain / Memory Map ]', value: 'view-brain' },
         { name: '[ Link Unified Memory (MCP) ]', value: 'mcp-link' },
         { name: '[ Settings ]', value: 'settings' },
         new inquirer.Separator(),
@@ -51,7 +53,7 @@ export async function settingsMenu(): Promise<SettingsChoice> {
       choices: [
         { name: '[ Manage Agents ]', value: 'agents-config' },
         { name: '[ Clear History ]', value: 'clear-history' },
-        { name: '[ Reset Memory (/brain) ]', value: 'reset-brain' },
+        { name: '[ Reset Memory ]', value: 'reset-brain' },
         new inquirer.Separator(),
         { name: '[ Back ]', value: 'back' }
       ]
