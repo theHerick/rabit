@@ -9,6 +9,7 @@ import chalk from 'chalk';
 import { preFlightCheck } from './setup/installer';
 import { ensureDirectories } from './tools/paths';
 import { installBuiltinDocs } from './tools/builtinDocs';
+import * as path from 'path';
 import { printBanner, printSplash, freshScreen, freshScreenWithBanner } from './terminal/display';
 import {
   mainMenu,
@@ -114,6 +115,19 @@ async function handleSettings(): Promise<void> {
   }
 }
 
+async function handleMcpLink(): Promise<void> {
+  const { freshScreen } = await import('./terminal/display');
+  freshScreen();
+  const serverPath = path.resolve(__dirname, 'mcp/index.ts');
+  const linkCmd = `claude mcp add --transport stdio rabit-mem -- npx ts-node ${serverPath}`;
+  
+  console.log(chalk.bold.cyan('=== Link Unified Memory (MCP) ===\n'));
+  console.log(chalk.white('To unify memory with your official Claude CLI, run this command in your terminal:\n'));
+  console.log(chalk.green.bold(linkCmd));
+  console.log(chalk.gray('\nAfter running this, Claude will have tools to search and record your project history.\n'));
+  await pressEnter();
+}
+
 async function main(): Promise<void> {
   installExceptionTraps();
   ensureDirectories();
@@ -142,6 +156,8 @@ async function main(): Promise<void> {
       }
     } else if (choice === 'settings') {
       await handleSettings();
+    } else if (choice === 'mcp-link') {
+      await handleMcpLink();
     } else if (choice === 'buy-license') {
       freshScreen();
       await showLicenseDialog();

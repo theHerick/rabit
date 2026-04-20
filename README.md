@@ -11,7 +11,7 @@
 
 **AI Project Manager · Multi-Agent Code Generation · Architecture-First**
 
-![Node](https://img.shields.io/badge/Node.js-%3E%3D18-green?logo=node.js)
+![Node](https://img.shields.io/badge/Node.js-%3E%3D18-green?logo=node.js)a
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue?logo=typescript)
 ![Ollama](https://img.shields.io/badge/Ollama-local-black?logo=ollama)
 ![License](https://img.shields.io/badge/license-MIT-purple)
@@ -60,7 +60,7 @@ architecture.md
 
 ## Providers
 
-Rabit supports two AI backends. Switch anytime from the settings menu.
+Rabit supports multiple AI backends. Switch anytime from the settings menu.
 
 | Provider | How | Requires |
 |----------|-----|----------|
@@ -83,7 +83,7 @@ Rabit supports two AI backends. Switch anytime from the settings menu.
 
 ## Installation
 
-**Requirements:** Node.js >= 18, Ollama (or Claude CLI)
+**Requirements:** Node.js >= 18, Ollama (or Claude CLI / Anthropic API key)
 
 ```bash
 git clone https://github.com/theHerick/rabit.git
@@ -132,7 +132,7 @@ rabit
 rabit/
 ├── src/
 │   ├── agents/        # Partitioner, Coder, Reviewer, Organizer
-│   ├── providers/     # Ollama, Claude CLI
+│   ├── providers/     # Ollama, Claude CLI, Anthropic API
 │   ├── core/          # Pipeline, session loop, executor
 │   ├── config/        # Agent bindings & defaults
 │   ├── db/            # Vector memory (JSONL + cosine similarity)
@@ -149,7 +149,7 @@ rabit/
 - **Parallel Coders** — distribute work across 1, 2, or 3 coders simultaneously
 - **Auto-Review** — TypeScript compile + build + test run automatically
 - **Auto-Fix** — if tests fail, a Fix Organizer patches the issues and re-validates
-- **Provider Agnostic** — same pipeline, any model (Ollama or Claude CLI)
+- **Provider Agnostic** — same pipeline, any model (local or cloud)
 - **Preset System** — save and load agent configurations
 - **Vector Memory** — `/brain` builds a semantic knowledge map of your projects
 

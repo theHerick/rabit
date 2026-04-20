@@ -11,6 +11,7 @@ import { getBinding } from '../config/agents';
 import { say } from '../terminal/voices';
 import type { CoderType } from '../tools/promptAdaptation';
 import { isClaudeCoder, getCoderSystemPrompt, getCoderTaskPrompt } from '../tools/promptAdaptation';
+import { remember } from '../db/memory';
 
 export interface CoderResult {
   ok: boolean;
@@ -48,11 +49,20 @@ export async function codeWithMinimalContext(
       temperature: isClaudeType ? 0.2 : 0.3,
       format: 'json',
       numCtx: isClaudeType ? 6144 : 8192,
-      effort: isClaudeType ? 'medium' : 'high'
+      effort: isClaudeType ? 'medium' : 'high',
+      useMemory: true,
+      projectId: path.basename(projectPath)
     });
 
     // Parse response
     const parsed = parseCoderResponse(raw);
+
+    // Log observation
+    await remember({
+      category: 'observation',
+      content: `Coder ${coderId} (${coderType}) implemented ${Object.keys(parsed.files).length} files: ${Object.keys(parsed.files).join(', ')}`,
+      metadata: { projectId: path.basename(projectPath), coderId, files: Object.keys(parsed.files) }
+    });
 
     // Save files
     for (const [filePath, content] of Object.entries(parsed.files)) {

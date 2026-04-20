@@ -11,6 +11,9 @@ import { organizeAndFixProject } from '../agents/fixOrganizer';
 import { say } from '../terminal/voices';
 import { ProjectSession } from '../tools/projectSession';
 import { updateStatus } from '../terminal/display';
+import { remember, listAll } from '../db/memory';
+import { summarizeObservations } from '../agents/memoryAgent';
+import * as path from 'path';
 
 export interface NewPipelineResult {
   ok: boolean;
@@ -25,7 +28,16 @@ export interface NewPipelineResult {
 export async function runNewPipeline(
   project: ProjectSession
 ): Promise<NewPipelineResult> {
+  const sessionObservations: string[] = [];
+  const projId = path.basename(project.path);
+  
   try {
+    await remember({
+      category: 'observation',
+      content: `Starting new pipeline for project ${projId}`,
+      metadata: { projectId: projId, status: 'start' }
+    });
+
     const coderCount = 3; // Configurable later
 
     // STEP 1: Partitioner reads architecture.md
@@ -113,10 +125,17 @@ export async function runNewPipeline(
     }
 
     // STEP 4b: If passed, organizer tidies up layout
-    updateStatus('Organizing');
-    say('system', 'Organizing final files...');
-
     await organizeAndFixProject(project.path, partition.architecture, []);
+
+    // Step 5: Finalize and Summarize
+    const allMemories = await listAll();
+    const currentSessionObservations = allMemories.filter(m => 
+      m.category === 'observation' && 
+      m.metadata?.projectId === projId &&
+      new Date(m.timestamp).getTime() > Date.now() - 3600000 // Last hour
+    );
+
+    await summarizeObservations(currentSessionObservations, projId);
 
     return {
       ok: true,

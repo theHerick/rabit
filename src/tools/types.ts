@@ -52,11 +52,12 @@ export interface Skill {
 
 export interface MemoryRecord {
   id: string;
-  category: 'command' | 'file-read' | 'decision';
+  category: 'command' | 'file-read' | 'decision' | 'observation' | 'summary';
   content: string;
   vector: number[];
   timestamp: string;
   parentId?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SessionData {

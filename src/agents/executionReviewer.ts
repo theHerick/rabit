@@ -101,6 +101,15 @@ export async function reviewAndExecuteCode(projectPath: string): Promise<ReviewR
       say('reviewer', `✗ ${issues.length} issue(s) found`);
     }
 
+    // Log observation
+    await remember({
+      category: 'observation',
+      content: passed 
+        ? `Review passed for project ${path.basename(projectPath)}`
+        : `Review failed for project ${path.basename(projectPath)} with ${issues.length} issues: ${issues.slice(0, 3).join(', ')}`,
+      metadata: { projectId: path.basename(projectPath), status: 'reviewed', passed, issueCount: issues.length }
+    });
+
     return {
       passed,
       issues: issues.length > 0 ? issues : undefined,
@@ -108,6 +117,14 @@ export async function reviewAndExecuteCode(projectPath: string): Promise<ReviewR
     };
   } catch (err) {
     say('reviewer', '✗ critical error');
+    
+    // Log critical failure
+    await remember({
+      category: 'observation',
+      content: `Critical error during review of project ${path.basename(projectPath)}: ${String(err)}`,
+      metadata: { projectId: path.basename(projectPath), status: 'review_error', error: String(err) }
+    });
+
     return {
       passed: false,
       issues: [String(err)],
@@ -115,6 +132,8 @@ export async function reviewAndExecuteCode(projectPath: string): Promise<ReviewR
     };
   }
 }
+
+import { remember } from '../db/memory';
 
 /**
  * Checks if script exists in package.json

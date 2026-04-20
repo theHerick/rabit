@@ -17,6 +17,7 @@ interface MemoryRow extends Record<string, unknown> {
   vector: number[];
   timestamp: string;
   parentId: string;
+  metadata: string; // JSON string
 }
 
 let tableSingleton: JsonlTable<MemoryRow> | null = null;
@@ -32,19 +33,26 @@ function toRow(rec: MemoryRecord): MemoryRow {
     content: rec.content,
     vector: rec.vector,
     timestamp: rec.timestamp,
-    parentId: rec.parentId ?? ''
+    parentId: rec.parentId ?? '',
+    metadata: JSON.stringify(rec.metadata ?? {})
   };
 }
 
 function fromRow(row: MemoryRow): MemoryRecord {
   const parent = row.parentId ?? '';
+  let metadata = {};
+  try {
+    metadata = JSON.parse(row.metadata || '{}');
+  } catch {}
+
   return {
     id: row.id,
     category: row.category as MemoryRecord['category'],
     content: row.content,
     vector: row.vector,
     timestamp: row.timestamp,
-    parentId: parent.length > 0 ? parent : undefined
+    parentId: parent.length > 0 ? parent : undefined,
+    metadata
   };
 }
 
@@ -52,6 +60,7 @@ export async function remember(opts: {
   category: MemoryRecord['category'];
   content: string;
   parentId?: string;
+  metadata?: Record<string, unknown>;
 }): Promise<MemoryRecord> {
   const vector = await embed(opts.content.slice(0, 2048));
   const rec: MemoryRecord = {
@@ -60,7 +69,8 @@ export async function remember(opts: {
     content: opts.content,
     vector,
     timestamp: new Date().toISOString(),
-    parentId: opts.parentId
+    parentId: opts.parentId,
+    metadata: opts.metadata
   };
   try {
     table().add(toRow(rec));
@@ -81,6 +91,48 @@ export async function listAll(): Promise<MemoryRecord[]> {
 export async function wipeMemory(): Promise<void> {
   table().truncate();
   tableSingleton = null;
+}
+
+/**
+ * Cosine similarity between two vectors
+ */
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dot = 0, ma = 0, mb = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    ma += a[i] * a[i];
+    mb += b[i] * b[i];
+  }
+  return dot / (Math.sqrt(ma) * Math.sqrt(mb));
+}
+
+/**
+ * Search memories semantically using vector similarity.
+ */
+export async function searchMemories(query: string, opts: {
+  category?: MemoryRecord['category'];
+  limit?: number;
+  minScore?: number;
+} = {}): Promise<MemoryRecord[]> {
+  const queryVector = await embed(query.slice(0, 2048));
+  const limit = opts.limit ?? 5;
+  const minScore = opts.minScore ?? 0.7;
+
+  let all = table().all().map(fromRow);
+  if (opts.category) {
+    all = all.filter(r => r.category === opts.category);
+  }
+
+  const scored = all.map(rec => ({
+    rec,
+    score: cosineSimilarity(queryVector, rec.vector)
+  }));
+
+  return scored
+    .filter(s => s.score >= minScore)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(s => s.rec);
 }
 
 /**

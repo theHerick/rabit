@@ -14,6 +14,7 @@ export type MainChoice =
   | 'open-project'
   | 'settings'
   | 'exit'
+  | 'mcp-link'
   | 'buy-license';
 
 export type SettingsChoice = 'agents-config' | 'clear-history' | 'reset-brain' | 'back';
@@ -29,6 +30,7 @@ export async function mainMenu(): Promise<MainChoice> {
       choices: [
         { name: '[ Chat / New Project ]', value: 'new-session' },
         { name: '[ Open Existing Project ]', value: 'open-project' },
+        { name: '[ Link Unified Memory (MCP) ]', value: 'mcp-link' },
         { name: '[ Settings ]', value: 'settings' },
         new inquirer.Separator(),
         { name: '[ Exit ]', value: 'exit' },

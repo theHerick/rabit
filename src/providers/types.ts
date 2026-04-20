@@ -16,8 +16,10 @@ export interface CompleteOptions {
   numCtx?: number;
   /** JSON Schema para validacao nativa (suportado pelo claude-cli via --json-schema). */
   jsonSchema?: Record<string, unknown>;
-  /** Nivel de esforco/qualidade (suportado pelo claude-cli via --effort). */
   effort?: 'low' | 'medium' | 'high';
+  /** Whether to inject semantic memory into the prompt. */
+  useMemory?: boolean;
+  projectId?: string;
 }
 
 export interface LLMProvider {

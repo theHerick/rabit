@@ -9,7 +9,16 @@
       "Bash(claude -p --input-format stream-json --output-format stream-json --verbose --no-session-persistence)",
       "Bash(claude -p --model haiku --output-format json --json-schema '{\"type\":\"object\",\"properties\":{\"msg\":{\"type\":\"string\"}},\"required\":[\"msg\"]}' --no-session-persistence)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git *)",
+      "Bash(gh repo *)",
+      "Bash(mkdir -p /tmp/herick-profile)",
+      "Bash(cat)",
+      "Bash(gh api *)",
+      "Bash(gh workflow *)"
     ]
   }
 }

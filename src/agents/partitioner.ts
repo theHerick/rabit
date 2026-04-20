@@ -10,6 +10,7 @@ import { completeFor } from '../providers';
 import { getBinding, getCoderCount } from '../config/agents';
 import { say } from '../terminal/voices';
 import { detectModelType, getAdaptivePartitionerPrompt } from '../tools/promptAdaptation';
+import { remember } from '../db/memory';
 
 export interface CoderTask {
   coderId: number;
@@ -74,10 +75,18 @@ export async function partitionArchitecture(
     temperature: 0,
     format: 'json',
     numCtx: modelType === 'ollama' ? 6144 : 4096,
-    effort: 'low' // Very fast
+    effort: 'low', // Very fast
+    useMemory: true
   });
 
   const parsed = parsePartitionResponse(raw, coderCount, files);
+
+  // Log observation
+  await remember({
+    category: 'observation',
+    content: `Architect partitioned project into ${parsed.length} tasks for ${coderCount} coders. Plan: ${parsed.map(t => `${t.coderType}(${t.files.length} files)`).join(', ')}`,
+    metadata: { status: 'partitioned', taskCount: parsed.length, coderCount }
+  });
 
   say('architect', `partitioned: ${parsed.map(t => `Coder${t.coderId}(${t.files.length})`).join(' | ')}`);
 

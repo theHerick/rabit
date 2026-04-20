@@ -20,7 +20,8 @@ export type AgentRoleKey =
   | 'seniorCoder'
   | 'designCoder'
   | 'reviewer'
-  | 'organizer';
+  | 'organizer'
+  | 'memoryAgent';
 
 export interface AgentConfig {
   models: Record<AgentRoleKey, RoleBinding>;
@@ -41,7 +42,8 @@ export const DEFAULT_CONFIG: AgentConfig = {
     seniorCoder: { provider: 'ollama', model: 'deepseek-coder-v2:latest' },
     designCoder: { provider: 'ollama', model: 'qwen3.5:latest' },
     reviewer:    { provider: 'ollama', model: 'qwen2.5-coder:7b' },
-    organizer:   { provider: 'ollama', model: 'qwen3.5:latest' }
+    organizer:   { provider: 'ollama', model: 'qwen3.5:latest' },
+    memoryAgent: { provider: 'ollama', model: 'llama3.1:8b' }
   },
   params: {
     agentTimeoutMs: 15 * 60_000,
@@ -69,7 +71,8 @@ export const CLAUDE_CLI_CONFIG: AgentConfig = {
     seniorCoder: { provider: 'claude-cli', model: 'sonnet', effort: 'high' },
     designCoder: { provider: 'claude-cli', model: 'sonnet', effort: 'medium' },
     reviewer:    { provider: 'claude-cli', model: 'haiku',  effort: 'medium' },
-    organizer:   { provider: 'claude-cli', model: 'haiku',  effort: 'low' }
+    organizer:   { provider: 'claude-cli', model: 'haiku',  effort: 'low' },
+    memoryAgent: { provider: 'claude-cli', model: 'haiku',  effort: 'medium' }
   },
   params: {
     agentTimeoutMs: 5 * 60_000,
@@ -85,7 +88,8 @@ export const ROLES: ReadonlyArray<RoleMeta> = [
   { key: 'coder',       label: 'Coder',        description: 'generic coder (fallback)' },
   { key: 'designCoder', label: 'Design Coder', description: 'generates CSS and professional design' },
   { key: 'reviewer',    label: 'Reviewer',     description: 'audits and fixes generated code' },
-  { key: 'organizer',   label: 'Organizer',    description: 'organizes final folder structure' }
+  { key: 'organizer',   label: 'Organizer',    description: 'organizes final folder structure' },
+  { key: 'memoryAgent', label: 'Memory Agent', description: 'compresses observations into semantic summaries' }
 ];
 
 let cache: AgentConfig | null = null;

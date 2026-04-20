@@ -23,16 +23,17 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "ollama": "^0.5.11",
-    "inquirer": "^8.2.6",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "chalk": "^4.1.2",
-    "log-update": "^4.0.0"
+    "inquirer": "^8.2.6",
+    "log-update": "^4.0.0",
+    "ollama": "^0.5.11"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
     "@types/inquirer": "^8.2.10",
-    "typescript": "^5.4.0",
-    "ts-node": "^10.9.2"
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
   },
   "engines": {
     "node": ">=18.0.0"

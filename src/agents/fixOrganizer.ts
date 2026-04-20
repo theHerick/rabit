@@ -9,6 +9,7 @@ import * as path from 'path';
 import { completeFor } from '../providers';
 import { getBinding } from '../config/agents';
 import { say } from '../terminal/voices';
+import { remember } from '../db/memory';
 
 export interface OrganizerResult {
   ok: boolean;
@@ -49,6 +50,15 @@ export async function organizeAndFixProject(
 
     // Organize folders at the end
     organizeFolders(projectPath);
+
+    // Log observation
+    if (fixed.length > 0) {
+      await remember({
+        category: 'observation',
+        content: `Organizer fixed ${fixed.length} issue(s) for project ${path.basename(projectPath)}: ${fixed.join(', ')}`,
+        metadata: { projectId: path.basename(projectPath), status: 'organized', fixedCount: fixed.length }
+      });
+    }
 
     return {
       ok: fixed.length === issues.length,

@@ -10,7 +10,7 @@ import { spawn } from 'child_process';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { startStatus, stopStatus, printBanner, printSimpleBanner, clearDisplay, freshScreen, clearSessionScreen } from '../terminal/display';
-import { renderBrain, wipeMemory } from '../db/memory';
+import { renderBrain, wipeMemory, listAll } from '../db/memory';
 import * as Session from './session';
 import { SessionData, SessionMessage } from '../tools/types';
 import { say, renderLegend } from '../terminal/voices';
@@ -31,6 +31,7 @@ const HELP_TEXT = `Reserved commands:
   /voices     Show agent voices
   /history    Open session history
   /clear      Clear screen
+  /mcp       Link memory with official Claude Code CLI
   /help       Show this help
   /exit       Close the session`;
 
@@ -210,6 +211,15 @@ export async function runInteractiveSession(existing?: SessionData): Promise<voi
       say('brain', 'drawing the knowledge tree...');
       const tree = await renderBrain();
       console.log(tree + '\n');
+      
+      const summaries = (await listAll()).filter(m => m.category === 'summary');
+      if (summaries.length > 0) {
+        console.log(chalk.bold.yellow('=== Semantic Summaries ==='));
+        summaries.slice(-5).forEach(s => {
+          console.log(chalk.gray(`[${s.timestamp.slice(0,10)}] `) + chalk.white(s.content.slice(0, 200) + '...'));
+        });
+        console.log();
+      }
       continue;
     }
 
@@ -224,6 +234,19 @@ export async function runInteractiveSession(existing?: SessionData): Promise<voi
       await wipeMemory();
       say('brain', 'memory wiped');
       console.log();
+      continue;
+    }
+
+    if (input === '/mcp') {
+      clearSessionScreen();
+      const serverPath = path.resolve(__dirname, '../mcp/index.ts');
+      const linkCmd = `claude mcp add --transport stdio rabit-mem -- npx ts-node ${serverPath}`;
+      
+      console.log(chalk.bold.cyan('=== Link with Claude Code CLI ===\n'));
+      console.log(chalk.white('To unify memory with your official Claude CLI, run this command in your terminal:\n'));
+      console.log(chalk.green.bold(linkCmd));
+      console.log(chalk.gray('\nAfter running this, Claude will have tools to search and record your project history.\n'));
+      await pressEnter();
       continue;
     }
 
